@@ -9,6 +9,19 @@ package dungeon;
  *
  * @author taylo
  */
-public class Human {
+public class Human extends SpaceContent {
+
+    public Human() {
+        super();
+    }
+
+    @Override
+    public boolean isHuman() {
+        return true;
+    }
+    
+    
+    
+    
     
 }

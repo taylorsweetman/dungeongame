@@ -23,8 +23,56 @@ public class Display {
         } else if (dungeon.lostCondition()) {
             System.out.println("YOU LOSE");
         } else {
-            System.out.println(dungeon.getMoves());
+            System.out.println(dungeon.getMoves() + "\n");
+            System.out.println(currentList());
+            System.out.println(mapInString());
+
         }
+    }
+
+    public String currentList() {
+        String returnString = "";
+
+        returnString += "@ " + dungeon.getPlayer().getCurrentPosition().getyLocation() + " " + dungeon.getPlayer().getCurrentPosition().getxLocation() + "\n";
+
+        for (Position pos : dungeon.getDungeonMap().keySet()) {
+            if (dungeon.positionContainsVamp(pos)) {
+                returnString += "v " + pos.getyLocation() + " " + pos.getxLocation() + "\n";
+            }
+        }
+        return returnString;
+    }
+
+    public String mapInString() {
+        int height = dungeon.getHeight();
+        int length = dungeon.getLength();
+        Position currentPosition = new Position();
+        String returnString = "";
+
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < height; j++) {
+                currentPosition = new Position(i, j);
+                if (dungeon.positionContainsHuman(currentPosition)) {
+                    returnString += "@";
+                    if (currentPosition.getyLocation() == length - 1) {
+                        returnString += "\n";
+                    }
+                } else if (dungeon.positionContainsVamp(currentPosition)) {
+                    returnString += "v";
+                    if (currentPosition.getyLocation() == length - 1) {
+                        returnString += "\n";
+                    }
+                } else {
+                    returnString += ".";
+                    if (currentPosition.getyLocation() == length - 1) {
+                        returnString += "\n";
+                    }
+                }
+
+            }
+
+        }
+        return returnString;
     }
 
 }

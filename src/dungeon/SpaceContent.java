@@ -20,10 +20,15 @@ public class SpaceContent {
     public boolean isVampire() {
         return false;
     }
+    
+    public boolean isHuman() {
+        return false;
+    }
 
     public Position getCurrentPosition() {
         return currentPosition;
     }
+    
     
     
     

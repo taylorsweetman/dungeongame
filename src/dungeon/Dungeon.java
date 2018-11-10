@@ -21,6 +21,7 @@ public class Dungeon {
     private Map<Position, SpaceContent> dungeonMap;
     private Display display;
     private Movement movementLogic;
+    private Human player;
 
     public Dungeon(int length, int height, int vampires, int moves, boolean vampiresMove) {
         this.length = length;
@@ -28,17 +29,30 @@ public class Dungeon {
         this.vampires = vampires;
         this.moves = moves;
         this.vampiresMove = vampiresMove;
+        player = new Human();
         dungeonMap = new HashMap<Position, SpaceContent>();
         generatePositions();
         display = new Display(this);
         movementLogic = new Movement(this);
     }
 
+    public Human getPlayer() {
+        return player;
+    }
+
+    public Map<Position, SpaceContent> getDungeonMap() {
+        return dungeonMap;
+    }
+    
     //creates HashMap of all possible positions of dungeon
     public final void generatePositions() {
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < height; j++) {
-                dungeonMap.put(new Position(i, j), new EmptySpace());
+                if (i == 0 && j == 0) {
+                    dungeonMap.put(new Position(0, 0), player);
+                } else {
+                    dungeonMap.put(new Position(i, j), new EmptySpace());
+                }
             }
         }
         placeVamps();
@@ -66,9 +80,12 @@ public class Dungeon {
     //might be a redundant method
     public boolean positionContainsVamp(Position pos) {
         SpaceContent creatureAtPos = dungeonMap.get(pos);
-
         return creatureAtPos.isVampire();
-
+    }
+    
+    public boolean positionContainsHuman(Position pos) {
+        SpaceContent creatureAtPos = dungeonMap.get(pos);
+        return creatureAtPos.isHuman();
     }
 
     public int getHeight() {
@@ -99,8 +116,9 @@ public class Dungeon {
     public void run() {
 
         display.show();
-        if (!winCondition() && !lostCondition()) {
-            movementLogic.getDeltaPositionFromText();
+        while (!winCondition() && !lostCondition()) {
+            Position deltaPlayerPos = movementLogic.getDeltaPositionFromText();
+            
             moves--;
         }
     }

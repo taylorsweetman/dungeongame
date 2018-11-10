@@ -14,7 +14,7 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        Dungeon testDungeon = new Dungeon(3, 3, 1, 10, true);
+        Dungeon testDungeon = new Dungeon(5, 5, 1, 10, true);
         testDungeon.run();
     }
 
