@@ -218,14 +218,15 @@ public class Dungeon {
     }
 
     public void run() {
+        int numberOfVampMoves = 1;
         show();
 
         while (!winCondition() && !lostCondition()) {
-            int numberOfVampMoves = givePlayerNewLocationFromText();
 
             for (Vampire vampire : vampList) {
                 randomlyMoveVampire(numberOfVampMoves, vampire);
             }
+            numberOfVampMoves = givePlayerNewLocationFromText();
 
             moves--;
             show();

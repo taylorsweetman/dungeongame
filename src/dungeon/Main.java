@@ -15,7 +15,7 @@ public class Main {
     
 
     public static void main(String[] args) {
-        Dungeon gameDungeon = new Dungeon(15, 15, 10, 10, true);
+        Dungeon gameDungeon = new Dungeon(3, 3, 1, 10, true);
         gameDungeon.run();
     }
     
