@@ -37,22 +37,4 @@ public class SpaceContent {
         this.position = position;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        SpaceContent SCobj = (SpaceContent) obj;
-
-        if (!this.getClass().equals(SCobj.getClass())) {
-            return false;
-        }
-
-        return this.getPosition() == (SCobj.getPosition());
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 73 * hash + (this.position != null ? this.position.hashCode() : 0);
-        return hash;
-    }
-
 }

@@ -9,6 +9,7 @@ package dungeon;
  *
  * @author taylo
  */
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.util.*;
 
 public class Dungeon {
@@ -134,9 +135,7 @@ public class Dungeon {
                     newVertPos--;
                 }
             }
-            vampList.remove(vampire);
-            Vampire newVamp = new Vampire(newHorPos, newVertPos);
-            vampList.add(newVamp);
+            vampire.setPosition(new Position(newHorPos, newVertPos));
         }
     }
 
@@ -197,11 +196,14 @@ public class Dungeon {
 
     public void run() {
         show();
-        Vampire testVamp = vampList.get(0);
 
         while (!winCondition() && !lostCondition()) {
             int numberOfVampMoves = givePlayerNewLocationFromText();
-            randomlyMoveVampire(numberOfVampMoves, testVamp);
+
+            for (Vampire vampire : vampList) {
+                randomlyMoveVampire(numberOfVampMoves, vampire);
+            }
+
             moves--;
             show();
         }
