@@ -12,10 +12,12 @@ package dungeon;
 import java.util.*;
 
 public class Main {
+    
 
     public static void main(String[] args) {
-        Dungeon testDungeon = new Dungeon(5, 5, 1, 10, true);
-        testDungeon.run();
+        Dungeon gameDungeon = new Dungeon(5, 5, 1, 10, true);
+        gameDungeon.run();
     }
+    
 
 }

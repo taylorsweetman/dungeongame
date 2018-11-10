@@ -18,22 +18,24 @@ public class Dungeon {
     private int vampires;
     private int moves;
     private boolean vampiresMove;
-    private Display display;
-    private Movement movementLogic;
     private Human player;
     private List<Vampire> vampList;
+    private Scanner myScanner;
+    private int maxHorValue;
+    private int maxVertValue;
 
     public Dungeon(int length, int height, int vampires, int moves, boolean vampiresMove) {
         this.length = length;
         this.height = height;
         this.vampires = vampires;
         this.moves = moves;
+        maxHorValue = length - 1;
+        maxVertValue = height - 1;
+        myScanner = new Scanner(System.in);
         this.vampiresMove = vampiresMove;
         player = new Human();
         vampList = new ArrayList<Vampire>();
         placeVamps();
-        display = new Display(this);
-        movementLogic = new Movement(this);
     }
 
     public final void placeVamps() {
@@ -63,7 +65,7 @@ public class Dungeon {
         }
         return returnList;
     }
-    
+
     public boolean winCondition() {
         return vampList.isEmpty();
     }
@@ -72,21 +74,149 @@ public class Dungeon {
         return moves == 0;
     }
 
-    public void run() {
+    public int givePlayerNewLocationFromText() {
+        String inputString = myScanner.nextLine();
+        int newHorPos = player.getPosition().getHorLocation();
+        int newVertPos = player.getPosition().getVertLocation();
+        int count = 0;
 
-        display.show();
-        while (!winCondition() && !lostCondition()) {
-            Position deltaPlayerPos = movementLogic.givePlayerNewLocationFromText();
-            moves--;
+        for (int i = 0; i < inputString.length(); i++) {
+            if (inputString.charAt(i) == 'd' && newHorPos + 1 <= maxHorValue) {
+                newHorPos++;
+                count++;
+            }
+            if (inputString.charAt(i) == 'w' && newVertPos - 1 >= 0) {
+                newVertPos--;
+                count++;
+            }
+            if (inputString.charAt(i) == 'a' && newHorPos - 1 >= 0) {
+                newHorPos--;
+                count++;
+            }
+            if (inputString.charAt(i) == 's' && newVertPos + 1 <= maxVertValue) {
+                newVertPos++;
+                count++;
+            }
+        }
+        Position newPositionForPlayer = new Position(newHorPos, newVertPos);
+        player.setPosition(newPositionForPlayer);
+        return count;
+    }
+
+    public void randomlyMoveVampire(int numberOfTimes, Vampire vampire) {
+        //cant cross border
+        //cant hit another vampire
+        Random myRandom = new Random();
+
+        int newHorPos = vampire.getPosition().getHorLocation();
+        int newVertPos = vampire.getPosition().getVertLocation();
+
+        for (int i = 0; i < numberOfTimes; i++) {
+
+            //move to right
+            if (myRandom.nextBoolean() == true && myRandom.nextBoolean() == true) {
+                if (newHorPos + 1 <= maxHorValue && !getVampirePositions().contains(new Position(newHorPos + 1, newVertPos))) {
+                    newHorPos++;
+                }
+            } //move to left
+            else if (myRandom.nextBoolean() == true && myRandom.nextBoolean() == true) {
+                if (newHorPos - 1 >= 0 && !getVampirePositions().contains(new Position(newHorPos - 1, newVertPos))) {
+                    newHorPos--;
+                }
+            } //move up
+            else if (myRandom.nextBoolean() == true && myRandom.nextBoolean() == true) {
+                if (newVertPos + 1 <= 0 && !getVampirePositions().contains(new Position(newHorPos, newVertPos + 1))) {
+                    newVertPos++;
+                }
+            } //move down
+            else {
+                if (newVertPos - 1 >= 0 && !getVampirePositions().contains(new Position(newHorPos, newVertPos - 1))) {
+                    newVertPos--;
+                }
+            }
+            vampList.remove(vampire);
+            Vampire newVamp = new Vampire(newHorPos, newVertPos);
+            vampList.add(newVamp);
         }
     }
 
-    public int getHeight() {
-        return height;
+    public void show() {
+        if (winCondition()) {
+            System.out.println("YOU WIN");
+        } else if (lostCondition()) {
+            System.out.println("YOU LOSE");
+        } else {
+            System.out.println(moves + "\n");
+            System.out.println(currentList());
+            System.out.println(mapInString());
+        }
+    }
+
+    public String currentList() {
+        String returnString = "";
+
+        returnString += "@ " + player.getPosition().getHorLocation() + " " + player.getPosition().getVertLocation() + "\n";
+
+        for (Position pos : getVampirePositions()) {
+
+            returnString += "v " + pos.getHorLocation() + " " + pos.getVertLocation() + "\n";
+
+        }
+        return returnString;
+    }
+
+    public String mapInString() {
+        String returnString = "";
+
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < height; j++) {
+                Position positionInMap = new Position(j, i);
+
+                if (player.getPosition().equals(positionInMap)) {
+                    returnString += "@";
+                    if (positionInMap.getHorLocation() == length - 1) {
+                        returnString += "\n";
+                    }
+                } else if (getVampirePositions().contains(positionInMap)) {
+                    returnString += "v";
+                    if (positionInMap.getHorLocation() == length - 1) {
+                        returnString += "\n";
+                    }
+                } else {
+                    returnString += ".";
+                    if (positionInMap.getHorLocation() == length - 1) {
+                        returnString += "\n";
+                    }
+                }
+
+            }
+
+        }
+        return returnString;
+    }
+
+    public void run() {
+        show();
+        Vampire testVamp = vampList.get(0);
+
+        while (!winCondition() && !lostCondition()) {
+            int numberOfVampMoves = givePlayerNewLocationFromText();
+            randomlyMoveVampire(numberOfVampMoves, testVamp);
+            moves--;
+            show();
+        }
+    }
+
+    public Dungeon getDungeon() {
+        return this;
     }
 
     public int getLength() {
         return length;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public int getMoves() {
@@ -96,6 +226,5 @@ public class Dungeon {
     public Human getPlayer() {
         return player;
     }
-
 
 }
