@@ -37,7 +37,7 @@ public class Display {
 
         for (Position pos : dungeon.getDungeonMap().keySet()) {
             if (dungeon.positionContainsVamp(pos)) {
-                returnString += "v " + pos.getyLocation() + " " + pos.getxLocation() + "\n";
+                returnString += "v " + pos.getVertLocation() + " " + pos.getHorLocation() + "\n";
             }
         }
         return returnString;
@@ -54,17 +54,17 @@ public class Display {
                 currentPosition = new Position(i, j);
                 if (dungeon.positionContainsHuman(currentPosition)) {
                     returnString += "@";
-                    if (currentPosition.getyLocation() == length - 1) {
+                    if (currentPosition.getVertLocation() == length - 1) {
                         returnString += "\n";
                     }
                 } else if (dungeon.positionContainsVamp(currentPosition)) {
                     returnString += "v";
-                    if (currentPosition.getyLocation() == length - 1) {
+                    if (currentPosition.getVertLocation() == length - 1) {
                         returnString += "\n";
                     }
                 } else {
                     returnString += ".";
-                    if (currentPosition.getyLocation() == length - 1) {
+                    if (currentPosition.getVertLocation() == length - 1) {
                         returnString += "\n";
                     }
                 }

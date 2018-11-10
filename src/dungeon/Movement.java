@@ -15,71 +15,81 @@ public class Movement {
 
     private Scanner myScanner;
     private Dungeon myDungeon;
-    private int maxX;
-    private int maxY;
+    private int maxHorValue;
+    private int maxVertValue;
 
     public Movement(Dungeon myDungeon) {
         this.myScanner = new Scanner(System.in);
         this.myDungeon = myDungeon;
-        maxX = myDungeon.getLength() - 1;
-        maxY = myDungeon.getHeight() - 1;
+        maxHorValue = myDungeon.getLength() - 1;
+        maxVertValue = myDungeon.getHeight() - 1;
     }
 
-    public Position getDeltaPositionFromText() {
+    public int givePlayerNewLocationFromText() {
         String inputString = myScanner.nextLine();
-        int deltaX = 0;
-        int deltaY = 0;
+        int newHorPos = myDungeon.getPlayer().getPosition().getHorLocation();
+        int newVertPos = myDungeon.getPlayer().getPosition().getVertLocation();
+        int count = 0;
 
         for (int i = 0; i < inputString.length(); i++) {
-            if (inputString.charAt(i) == 'd' && deltaX + 1 <= maxX) {
-                deltaX++;
+            if (inputString.charAt(i) == 'd' && newHorPos + 1 <= maxHorValue) {
+                newHorPos++;
+                count++;
             }
-            if (inputString.charAt(i) == 's' && deltaY - 1 >= 0) {
-                deltaY--;
+            if (inputString.charAt(i) == 's' && newVertPos - 1 >= 0) {
+                newVertPos--;
+                count++;
             }
-            if (inputString.charAt(i) == 'a' && deltaX - 1 >= 0) {
-                deltaX--;
+            if (inputString.charAt(i) == 'a' && newHorPos - 1 >= 0) {
+                newHorPos--;
+                count++;
             }
-            if (inputString.charAt(i) == 'w' && deltaY + 1 <= maxY) {
-                deltaY++;
+            if (inputString.charAt(i) == 'w' && newVertPos + 1 <= maxVertValue) {
+                newVertPos++;
+                count++;
             }
         }
-        return new Position(deltaX, deltaY);
+        Position newPositionForPlayer = new Position(newHorPos, newVertPos);
+        myDungeon.getPlayer().setPosition(newPositionForPlayer);
+        return count;
     }
 
-    public Position randomlyMoveVampire(int numberOfTimes, Vampire vampire) {
+    public void randomlyMoveVampire(int numberOfTimes, Vampire vampire) {
         //cant cross border
         //cant hit another vampire
         Random myRandom = new Random();
-        Position currentPosition = vampire.getCurrentPosition();
-        int finalX = currentPosition.getxLocation();
-        int finalY = currentPosition.getyLocation();
+        Position currentPosition = vampire.getPosition();
+        int newHorPos = currentPosition.getHorLocation();
+        int newVertPos = currentPosition.getVertLocation();
+        ArrayList<Position> currentVampPositions = myDungeon.getVampirePositions();
 
         for (int i = 0; i < numberOfTimes; i++) {
 
             //move to right
             if (myRandom.nextBoolean() == true && myRandom.nextBoolean() == true) {
-                if (finalX + 1 <= maxX && !myDungeon.positionContainsVamp(new Position(finalX + 1, finalY))) {
-                    finalX++;
+                if (newHorPos + 1 <= maxHorValue && !currentVampPositions.contains(new Position(newHorPos + 1, newVertPos))) {
+                    newHorPos++;
                 }
             } //move to left
             else if (myRandom.nextBoolean() == true && myRandom.nextBoolean() == true) {
-                if (finalX - 1 >= 0 && !myDungeon.positionContainsVamp(new Position(finalX - 1, finalY))) {
-                    finalX--;
+                if (newHorPos - 1 >= 0 && !currentVampPositions.contains(new Position(newHorPos - 1, newVertPos))) {
+                    newHorPos--;
                 }
             } //move up
             else if (myRandom.nextBoolean() == true && myRandom.nextBoolean() == true) {
-                if (finalY + 1 <= 0 && !myDungeon.positionContainsVamp(new Position(finalX, finalY + 1))) {
-                    finalY++;
+                if (newVertPos + 1 <= 0 && !currentVampPositions.contains(new Position(newHorPos, newVertPos + 1))) {
+                    newVertPos++;
                 }
             } //move down
             else {
-                if (finalY - 1 >= 0 && !myDungeon.positionContainsVamp(new Position(finalX, finalY - 1))) {
-                    finalY--;
+                if (newVertPos - 1 >= 0 && !currentVampPositions.contains(new Position(newHorPos, newVertPos - 1))) {
+                    newVertPos--;
                 }
             }
+            Position newPosition = new Position(newHorPos, newVertPos);
+            myDungeon.getVampirePositions().remove(currentPosition);
+            myDungeon.getVampirePositions().add(newPosition);
         }
-        return new Position(finalX, finalY);
     }
 
 }

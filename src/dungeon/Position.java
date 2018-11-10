@@ -11,25 +11,25 @@ package dungeon;
  */
 public class Position {
 
-    private int xLocation;
-    private int yLocation;
+    private int horLocation;
+    private int vertLocation;
 
     public Position() {
-        xLocation = 0;
-        yLocation = 0;
+        horLocation = 0;
+        vertLocation = 0;
     }
 
-    public Position(int xLocation, int yLocation) {
-        this.xLocation = xLocation;
-        this.yLocation = yLocation;
+    public Position(int horLocation, int vertLocation) {
+        this.horLocation = horLocation;
+        this.vertLocation = vertLocation;
     }
 
-    public int getxLocation() {
-        return xLocation;
+    public int getHorLocation() {
+        return horLocation;
     }
 
-    public int getyLocation() {
-        return yLocation;
+    public int getVertLocation() {
+        return vertLocation;
     }
 
     @Override
@@ -38,21 +38,22 @@ public class Position {
         if (!obj.getClass().equals(this.getClass())) {
             return false;
         } else {
-            return this.xLocation == posObj.getxLocation() && this.yLocation == posObj.getyLocation();
+            return this.horLocation == posObj.getHorLocation() && this.vertLocation == posObj.getVertLocation();
         }
     }
 
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 59 * hash + this.xLocation;
-        hash = 59 * hash + this.yLocation;
+        hash = 59 * hash + this.horLocation;
+        hash = 59 * hash + this.vertLocation;
         return hash;
     }
 
+    //explore deletion
     @Override
     public String toString() {
-        return "x: " + xLocation + " / " + "y: " + yLocation;
+        return "x: " + horLocation + " / " + "y: " + vertLocation;
     }
 
 }

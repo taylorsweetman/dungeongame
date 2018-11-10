@@ -10,16 +10,14 @@ package dungeon;
  * @author taylo
  */
 public class Vampire extends SpaceContent {
-    
-    public Vampire() {
-        super();
+
+    public Vampire(int horLocation, int vertLocation) {
+        super.setPosition(new Position(horLocation, vertLocation));
     }
 
     @Override
     public boolean isVampire() {
         return true;
     }
-    
-    
-    
+
 }

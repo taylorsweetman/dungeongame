@@ -18,10 +18,10 @@ public class Dungeon {
     private int vampires;
     private int moves;
     private boolean vampiresMove;
-    private Map<Position, SpaceContent> dungeonMap;
     private Display display;
     private Movement movementLogic;
     private Human player;
+    private List<Vampire> vampList;
 
     public Dungeon(int length, int height, int vampires, int moves, boolean vampiresMove) {
         this.length = length;
@@ -30,62 +30,55 @@ public class Dungeon {
         this.moves = moves;
         this.vampiresMove = vampiresMove;
         player = new Human();
-        dungeonMap = new HashMap<Position, SpaceContent>();
-        generatePositions();
+        vampList = new ArrayList<Vampire>();
+        placeVamps();
         display = new Display(this);
         movementLogic = new Movement(this);
     }
 
-    public Human getPlayer() {
-        return player;
-    }
-
-    public Map<Position, SpaceContent> getDungeonMap() {
-        return dungeonMap;
-    }
-    
-    //creates HashMap of all possible positions of dungeon
-    public final void generatePositions() {
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < height; j++) {
-                if (i == 0 && j == 0) {
-                    dungeonMap.put(new Position(0, 0), player);
-                } else {
-                    dungeonMap.put(new Position(i, j), new EmptySpace());
-                }
-            }
-        }
-        placeVamps();
-    }
-
     public final void placeVamps() {
         Random myRan = new Random();
-        Position origin = new Position(0, 0);
+        Position playerLocation = player.getPosition();
         int unallocatedVamps = vampires;
 
         while (unallocatedVamps > 0) {
-
             int ranX = myRan.nextInt(length);
             int ranY = myRan.nextInt(height);
             Position ranPos = new Position(ranX, ranY);
 
-            if (!positionContainsVamp(ranPos) && !ranPos.equals(origin)) {
-                dungeonMap.put(ranPos, new Vampire());
+            if (!getVampirePositions().contains(ranPos) && !player.getPosition().equals(ranPos)) {
+                Vampire newVamp = new Vampire(ranX, ranY);
+                vampList.add(newVamp);
                 unallocatedVamps--;
             }
 
         }
     }
 
-    //might be a redundant method
-    public boolean positionContainsVamp(Position pos) {
-        SpaceContent creatureAtPos = dungeonMap.get(pos);
-        return creatureAtPos.isVampire();
+    public ArrayList<Position> getVampirePositions() {
+        ArrayList<Position> returnList = new ArrayList<Position>();
+
+        for (Vampire vampire : vampList) {
+            returnList.add(vampire.getPosition());
+        }
+        return returnList;
     }
     
-    public boolean positionContainsHuman(Position pos) {
-        SpaceContent creatureAtPos = dungeonMap.get(pos);
-        return creatureAtPos.isHuman();
+    public boolean winCondition() {
+        return vampList.isEmpty();
+    }
+
+    public boolean lostCondition() {
+        return moves == 0;
+    }
+
+    public void run() {
+
+        display.show();
+        while (!winCondition() && !lostCondition()) {
+            Position deltaPlayerPos = movementLogic.givePlayerNewLocationFromText();
+            moves--;
+        }
     }
 
     public int getHeight() {
@@ -100,27 +93,9 @@ public class Dungeon {
         return moves;
     }
 
-    public boolean winCondition() {
-        for (Position pos : dungeonMap.keySet()) {
-            if (positionContainsVamp(pos)) {
-                return false;
-            }
-        }
-        return true;
+    public Human getPlayer() {
+        return player;
     }
 
-    public boolean lostCondition() {
-        return moves == 0;
-    }
-
-    public void run() {
-
-        display.show();
-        while (!winCondition() && !lostCondition()) {
-            Position deltaPlayerPos = movementLogic.getDeltaPositionFromText();
-            
-            moves--;
-        }
-    }
 
 }
