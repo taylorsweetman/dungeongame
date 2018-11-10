@@ -11,10 +11,10 @@ package dungeon;
  */
 public class SpaceContent {
     
-    private Position currentPosition;
+    private Position position;
     
     public SpaceContent() {
-        currentPosition = new Position();
+        position = new Position();
     }
     
     public boolean isVampire() {
@@ -24,12 +24,17 @@ public class SpaceContent {
     public boolean isHuman() {
         return false;
     }
-
-    public Position getCurrentPosition() {
-        return currentPosition;
+    
+    public boolean isEmpty() {
+        return false;
     }
-    
-    
-    
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
     
 }
