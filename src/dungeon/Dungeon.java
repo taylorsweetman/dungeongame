@@ -84,18 +84,38 @@ public class Dungeon {
         for (int i = 0; i < inputString.length(); i++) {
             if (inputString.charAt(i) == 'd' && newHorPos + 1 <= maxHorValue) {
                 newHorPos++;
+                Position newPos = new Position(newHorPos, newVertPos);
+                player.setPosition(newPos);
+                if (getVampirePositions().contains(getPlayer().getPosition())) {
+                    vampList.remove(getVampireAtPosition(newPos));
+                }
                 count++;
             }
             if (inputString.charAt(i) == 'w' && newVertPos - 1 >= 0) {
                 newVertPos--;
+                Position newPos = new Position(newHorPos, newVertPos);
+                player.setPosition(newPos);
+                if (getVampirePositions().contains(getPlayer().getPosition())) {
+                    vampList.remove(getVampireAtPosition(newPos));
+                }
                 count++;
             }
             if (inputString.charAt(i) == 'a' && newHorPos - 1 >= 0) {
                 newHorPos--;
+                Position newPos = new Position(newHorPos, newVertPos);
+                player.setPosition(newPos);
+                if (getVampirePositions().contains(getPlayer().getPosition())) {
+                    vampList.remove(getVampireAtPosition(newPos));
+                }
                 count++;
             }
             if (inputString.charAt(i) == 's' && newVertPos + 1 <= maxVertValue) {
                 newVertPos++;
+                Position newPos = new Position(newHorPos, newVertPos);
+                player.setPosition(newPos);
+                if (getVampirePositions().contains(getPlayer().getPosition())) {
+                    vampList.remove(getVampireAtPosition(newPos));
+                }
                 count++;
             }
         }
@@ -112,30 +132,33 @@ public class Dungeon {
         int newHorPos = vampire.getPosition().getHorLocation();
         int newVertPos = vampire.getPosition().getVertLocation();
 
-        for (int i = 0; i < numberOfTimes; i++) {
+        if (vampiresMove == true) {
 
-            //move to right
-            if (myRandom.nextBoolean() == true && myRandom.nextBoolean() == true) {
-                if (newHorPos + 1 <= maxHorValue && !getVampirePositions().contains(new Position(newHorPos + 1, newVertPos))) {
-                    newHorPos++;
+            for (int i = 0; i < numberOfTimes; i++) {
+
+                //move to right
+                if (myRandom.nextBoolean() == true && myRandom.nextBoolean() == true) {
+                    if (newHorPos + 1 <= maxHorValue && !getVampirePositions().contains(new Position(newHorPos + 1, newVertPos))) {
+                        newHorPos++;
+                    }
+                } //move to left
+                else if (myRandom.nextBoolean() == true && myRandom.nextBoolean() == true) {
+                    if (newHorPos - 1 >= 0 && !getVampirePositions().contains(new Position(newHorPos - 1, newVertPos))) {
+                        newHorPos--;
+                    }
+                } //move up
+                else if (myRandom.nextBoolean() == true && myRandom.nextBoolean() == true) {
+                    if (newVertPos + 1 <= 0 && !getVampirePositions().contains(new Position(newHorPos, newVertPos + 1))) {
+                        newVertPos++;
+                    }
+                } //move down
+                else {
+                    if (newVertPos - 1 >= 0 && !getVampirePositions().contains(new Position(newHorPos, newVertPos - 1))) {
+                        newVertPos--;
+                    }
                 }
-            } //move to left
-            else if (myRandom.nextBoolean() == true && myRandom.nextBoolean() == true) {
-                if (newHorPos - 1 >= 0 && !getVampirePositions().contains(new Position(newHorPos - 1, newVertPos))) {
-                    newHorPos--;
-                }
-            } //move up
-            else if (myRandom.nextBoolean() == true && myRandom.nextBoolean() == true) {
-                if (newVertPos + 1 <= 0 && !getVampirePositions().contains(new Position(newHorPos, newVertPos + 1))) {
-                    newVertPos++;
-                }
-            } //move down
-            else {
-                if (newVertPos - 1 >= 0 && !getVampirePositions().contains(new Position(newHorPos, newVertPos - 1))) {
-                    newVertPos--;
-                }
+                vampire.setPosition(new Position(newHorPos, newVertPos));
             }
-            vampire.setPosition(new Position(newHorPos, newVertPos));
         }
     }
 
@@ -227,6 +250,15 @@ public class Dungeon {
 
     public Human getPlayer() {
         return player;
+    }
+
+    public Vampire getVampireAtPosition(Position pos) {
+        for (Vampire vampire : vampList) {
+            if (vampire.getPosition().equals(pos)) {
+                return vampire;
+            }
+        }
+        return null;
     }
 
 }

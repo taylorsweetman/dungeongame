@@ -64,4 +64,29 @@ deps-jar:
 -compile-depend:
 
 -do-compile:
-    [javac] Compiling 3 source files to C:\Users\Taylor\Documents\NetBeansProjects\mooc-2013-OOProgrammingWithJava-PART2\week10-week10_33.Dungeon\build\classes
+
+-post-compile:
+
+compile:
+
+-pre-pre-compile-test:
+    [mkdir] Created dir: C:\Users\Taylor\Documents\NetBeansProjects\mooc-2013-OOProgrammingWithJava-PART2\week10-week10_33.Dungeon\build\test\classes
+
+-pre-compile-test:
+
+-compile-test-depend:
+
+-do-compile-test:
+    [javac] Compiling 1 source file to C:\Users\Taylor\Documents\NetBeansProjects\mooc-2013-OOProgrammingWithJava-PART2\week10-week10_33.Dungeon\build\test\classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] Note: C:\Users\Taylor\Documents\NetBeansProjects\mooc-2013-OOProgrammingWithJava-PART2\week10-week10_33.Dungeon\test\DungeonTest.java uses unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+    [javac] 1 warning
+     [copy] Copying 1 file to C:\Users\Taylor\Documents\NetBeansProjects\mooc-2013-OOProgrammingWithJava-PART2\week10-week10_33.Dungeon\build\test\classes
+
+-post-compile-test:
+
+compile-test:
+
+BUILD SUCCESSFUL
+Total time: 17 seconds
